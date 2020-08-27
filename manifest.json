@@ -20,8 +20,11 @@
   "content_scripts": [
     {
       "matches": ["https://robinhood.com/options/*"],
-      "js": ["content.js","jquery-3.5.1.min.js"],
+      "js": ["content.js", "jquery-3.5.1.min.js", "StockPanelParser.js"],
       "run_at": "document_end"
     }
-  ]
+  ],
+  "background": {
+    "scripts": ["background.js", "jquery-3.5.1.min.js"]
+  }
 }
