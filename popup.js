@@ -1,38 +1,28 @@
-document.addEventListener("DOMContentLoaded", function(event) {
-    fetchData();
-    setInterval(fetchData, 5000);
-});
+chrome.runtime.onMessage.addListener(
+    function (request, sender, sendResonse) {
+        console.log("request:", request);
+        console.log("sender:", sender);
 
-function fetchData() {
-    chrome.tabs.query({ url: "https://robinhood.com/options/*" }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, { action: "refreshNumbers" }, function (response) {
-            console.log("Page Response: ", response);
-            var price = response.price;
-            var option = response.option;
-            
-            if (price != "") {
-                $("#StockPrice").text(price);
+        if (request.msg === "Update Data") {
+            var price = request.data.Price;
+            var optionReturn = request.data.Option;
+
+            console.log("price:", price);
+            console.log("optionReturn:", optionReturn);
+
+            var stockPriceText = $("#StockPrice");
+            var optionReturnText = $("#OptionReturn");
+
+            $(stockPriceText).text(request.data.Price);
+            $(optionReturnText).text(request.data.Option);
+
+            if (price.startsWith('-')) {
+                //stockPriceText.css({})
+                console.log("Negative return");
             }
-
-            if (option != "") {
-                $("#OptionReturn").text(option);
+            else {
+                console.log("Positive return");
             }
-            
-            console.log("Stock Price:", $("#StockPrice").text());
-            console.log("Option Return:", $("#OptionReturn").text());
-
-            /***
-            chrome.notifications.create("stock_notification",{
-                type: "basic",
-                title: "Stock Information",
-                iconUrl: "icon.jpg",
-                message: "Stock price: " + (price != "" ? price : "?") + ", Option return: " + (option != "" ? option : "?")
-            })
-
-            chrome.notifications.getAll(function(notifs) {
-                console.log(notifs);
-            });
-            ***/
-        });
-    });
-}
+        }
+    }
+)

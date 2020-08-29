@@ -2,6 +2,5 @@
 // to display all at once instead of running per open tab of chrome
 function ParsePanel() {
     var sideBar = $(".sidebar-content");
-    //console.log("Side Bar: ");
-    //console.log(sideBar);
+    return sideBar.children;
 }
