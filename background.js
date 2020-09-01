@@ -3,27 +3,19 @@ function GetMarketData() {
 
     chrome.tabs.query({ url: "https://robinhood.com/" }, function (tabs) {
         if (tabs.length > 0) {
-            console.log("tab:", tabs[0]);
-
-            chrome.tabs.sendMessage(tabs[0].id, { action: "refreshNumbers" }, function (response) {
-                console.log("Page Response: ", response);
-                var price = response.price;
-                var option = response.option;
-                
-                chrome.runtime.sendMessage({
-                    msg: "Update Data",
-                    data: { 
-                        Price: price,
-                        Option: option
-                    }
-                });
-                
-                if (localStorage["Market Data"] == null) {
-                    localStorage["Market Data"] = { Price: price, Option: option };
-                }
-                else {
-                    // Do stored data comparison
-                    localStorage["Market Data"] = { Price: price, Option: option };
+            chrome.tabs.sendMessage(tabs[0].id, { action: "ScrapePage" }, function (response) {
+                if (response) {
+                    chrome.runtime.sendMessage({
+                        msg: "Update Data",
+                        data: { 
+                            MarketData: response
+                        }
+                    });
+                    
+                    // TODO: Do stored data comparison
+                    // If a stock/option moves $1 notify user
+    
+                    localStorage["Market Data"] = { MarketData: response };
                 }
             });
         }

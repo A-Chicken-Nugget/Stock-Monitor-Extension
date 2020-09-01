@@ -4,25 +4,11 @@ chrome.runtime.onMessage.addListener(
         console.log("sender:", sender);
 
         if (request.msg === "Update Data") {
-            var price = request.data.Price;
-            var optionReturn = request.data.Option;
+            var optionData = request.data.MarketData.sidePanel.OptionData;
+            var stockData = request.data.MarketData.sidePanel.StockData;
 
-            console.log("price:", price);
-            console.log("optionReturn:", optionReturn);
-
-            var stockPriceText = $("#StockPrice");
-            var optionReturnText = $("#OptionReturn");
-
-            $(stockPriceText).text(request.data.Price);
-            $(optionReturnText).text(request.data.Option);
-
-            if (price.startsWith('-')) {
-                //stockPriceText.css({})
-                console.log("Negative return");
-            }
-            else {
-                console.log("Positive return");
-            }
+            console.log("option data:", optionData);
+            console.log("stock data:", stockData);
         }
     }
 )
